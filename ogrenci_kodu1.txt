@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: sans-serif; background: #2c3e50; color: #ecf0f1; text-align: center; padding: 50px; }
+  .sahne { background: #34495e; padding: 30px; border-radius: 10px; max-width: 400px; margin: auto; }
+  #sonucGostergesi { margin-top:20px; padding:15px; border-radius:5px; font-weight:bold; }
+  .adim { background: #1e272e; margin: 5px; padding: 10px; border-radius: 5px; font-size:1.1rem; }
+</style>
+</head>
+<body>
+<div class="sahne">
+  <h2>KADİM KAPI OYUNU</h2>
+  <div id="adimlar">Adımlar bekleniyor...</div>
+  <div id="sonucGostergesi" style="display:none;"></div>
+</div>
+
+<script>
+/* =======================================
+   KADİM KAPI - Algoritma Sıralaması
+   =======================================
+   Buradaki listede kapıyı açmak için gereken
+   adımlar var. Ancak sıraları karışmış!
+   
+   Görev: Dizi içindeki numaraları doğru
+   mantık sırasına göre değiştir.
+*/
+
+// Adımların ID'lerini doğru sıraya koyalım.
+// İPUCU: 
+// 1: Cebinden çıkar 
+// 2: Kilide tak
+// 3: Sağa çevir
+// 4: Kolu indir
+// 5: Kapıyı aç
+let benimSiralamam = [2, 1, 4, 3, 5]; // Buradaki sayıları değiştirip test et! (Örn: 1, 2, 3, 4, 5 yap)
+
+// ======== DEĞERLENDİRME VE GÖRSELLEŞTİRME BÖLÜMÜ ========
+const dogruSiralama = [1, 2, 3, 4, 5];
+const adimYazilari = {
+    1: "Anahtarı cebinden çıkar",
+    2: "Anahtarı kilide tak",
+    3: "Anahtarı sağa çevir",
+    4: "Kapı kolunu indir",
+    5: "Kapıyı iterek aç"
+};
+
+let basarili = benimSiralamam.toString() === dogruSiralama.toString();
+let listeHtml = benimSiralamam.map(s => `<div class="adim">${adimYazilari[s] || "Gizemli Adım (" + s + ")"}</div>`).join("");
+document.getElementById("adimlar").innerHTML = listeHtml;
+let panel = document.getElementById("sonucGostergesi");
+panel.style.display = "block";
+
+if (basarili) {
+    panel.style.background = "#2ecc71";
+    panel.innerHTML = "🎉 DOĞRU! Kapı açıldı!";
+    document.body.style.background = "#2f3640";
+} else {
+    panel.style.background = "#e74c3c";
+    panel.innerHTML = "❌ OLMADI. Sıralama mantıksız.";
+}
+</script>
+</body>
+</html>

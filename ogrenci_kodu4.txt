@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: sans-serif; background: #2c3e50; color: white; text-align: center; padding: 50px; }
+  .baykus { background: #34495e; padding: 30px; border-radius: 10px; max-width: 400px; margin: auto; position:relative;}
+  .emoji { font-size: 4rem; margin-bottom: 10px;}
+  #sonuc { margin-top:20px; padding:15px; border-radius:5px; font-weight:bold; background:#3498db;}
+  .deger { color: #f1c40f; }
+</style>
+</head>
+<body>
+<div class="baykus">
+  <div class="emoji">🦉</div>
+  <h2>BİLGE BAYKUŞ - HESAPLAMA</h2>
+  <p>Değişkenlerle (Variables) matematik yapalım!</p>
+  <div id="sonuc">Bilinmiyor...</div>
+</div>
+
+<script>
+/* =======================================
+   BİLGE BAYKUŞ - Algoritma Takibi
+   =======================================
+   GÖREV: Aşağıdaki değişkenlerin değerlerini bul,
+   ve ekrandaki sonucu bilgisayar hesaplasın!
+*/
+
+// PROBLEM: Markette fındığın "700" gramı "21" TL ise, "1000" gramı kaç TL eder?
+// (Formül: (21 / 700) * 1000)
+
+// 1. Önce değerlerimizi "değişken" (variable) olarak tanımlıyoruz:
+let toplamFiyat = 21;
+let alinanGram = 700;
+
+let hedefGram = 1000; // Bulmak istediğimiz miktar
+
+// 2. Hesabımızı Matematik ile Değil, Bilgisayar ile yaptıralım!
+// formülünü kendin değiştir, çarp (*) böl (/)
+let birimFiyat = toplamFiyat / alinanGram; // 1 gramının fiyatı
+let sonucTL = birimFiyat * hedefGram; // Hedefin fiyatı
+
+// ======== DEĞERLENDİRME VE GÖRSELLEŞTİRME BÖLÜMÜ ========
+let dogruCevap = (21/700) * 1000;
+let panel = document.getElementById("sonuc");
+
+// Girdiğin formül doğruysa:
+if (sonucTL === dogruCevap) {
+    document.body.style.background = "#27ae60";
+    panel.innerHTML = `Senin Cevabın: <span class="deger">${sonucTL} TL</span><br>Tebrikler Değerler Doğru!`;
+} else {
+    document.body.style.background = "#c0392b";
+    panel.innerHTML = `Senin Cevabın: <span class="deger">${sonucTL || "Hata"} TL</span><br>Bir matematik hatası var!`;
+}
+</script>
+</body>
+</html>

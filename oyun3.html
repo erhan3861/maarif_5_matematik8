@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kristal Köprü - Sözde Kod</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Fredoka:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00cec9;
+            --dark-bg: #1e272e;
+            --accent: #fd79a8;
+            --text-light: #ecf0f1;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Fredoka', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: radial-gradient(circle at 20% 80%, #2d3436 0%, #000 100%);
+            transition: background 1s;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            height: 50px;
+        }
+
+        .hud h1 {
+            font-family: 'Orbitron';
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .hud-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Orbitron';
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        .hud-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-code {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-code:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .stage {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .level-info {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeIn 1s;
+        }
+
+        .bridge-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+            transform: scale(0.9);
+        }
+
+        .stone {
+            width: 80px;
+            height: 30px;
+            background: #636e72;
+            border-radius: 5px;
+            opacity: 0.3;
+            transition: 0.3s;
+        }
+
+        .stone.active {
+            background: var(--primary);
+            opacity: 1;
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .list-container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 15px;
+            width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-line {
+            background: #2d3436;
+            margin: 6px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .code-line:hover {
+            background: #353b48;
+        }
+
+        .code-line.selected {
+            border-left-color: var(--accent);
+            background: #353b48;
+        }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .arrow-btn {
+            font-size: 1.2rem;
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .arrow-btn:hover {
+            background: white;
+            color: black;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: white;
+            color: #2c3e50;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #95a5a6;
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .dot.active {
+            background: var(--primary);
+            transform: scale(1.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hud">
+        <button onclick="menuyeDon()" class="hud-btn"
+            style="background:transparent; border:none; color:white; font-size:1rem; cursor:pointer;">❮ MENÜ</button>
+        <h1>KRİSTAL KÖPRÜ</h1>
+        <div style="display:flex; gap:10px;">
+            <button class="hud-btn" onclick="openModal('missionModal')">📜 GÖREV</button>
+            <button class="hud-btn btn-code" onclick="openModal('codeModal')">💻 KODLA</button>
+        </div>
+    </div>
+
+    <div class="stage">
+        <div class="progress-dots" id="dots"></div>
+
+        <div class="level-info">
+            <h2 id="lvl-title" style="margin:0; color:var(--primary);"></h2>
+            <p id="lvl-desc" style="margin:5px 0 0 0; color:#bdc3c7; font-size:0.9rem;"></p>
+        </div>
+
+        <div class="bridge-container" id="stones-container">
+            <!-- Stones -->
+        </div>
+
+        <div class="list-container" id="list">
+            <!-- Items -->
+        </div>
+
+        <div class="controls">
+            <button class="arrow-btn" onclick="moveItem(-1)">▲</button>
+            <button class="arrow-btn" onclick="moveItem(1)">▼</button>
+        </div>
+
+        <button class="hud-btn" style="margin-top:20px; background:var(--primary); font-size:1.1rem;"
+            onclick="checkSort()">İNŞA ET</button>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="missionModal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('missionModal')">&times;</span>
+            <h2 style="color:var(--primary); font-family:'Orbitron'">GÖREV TALİMATI</h2>
+            <p>Sözde Kod (Pseudo-Code) satırlarını mantıklı bir sıraya dizerek köprüyü tamamla.</p>
+            <p>Algoritma her zaman <b>BAŞLA</b> ile başlar ve <b>BİTİR</b> ile biter.</p>
+        </div>
+    </div>
+
+    <div class="modal" id="codeModal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('codeModal')">&times;</span>
+            <h2 style="color:#fd79a8; font-family:'Orbitron'">KOD LABORATUVARI</h2>
+            <p>Sözde kod, programlamanın taslağıdır.</p>
+            <div
+                style="background:#2d3436; color:#fff; padding:15px; text-align:left; border-radius:5px; font-family:monospace; margin-top:10px;">
+                BAŞLA<br>
+                GİR: Sayı<br>
+                EĞER (Sayı > 10) YAZ "Büyük"<br>
+                BİTİR
+            </div>
+            <div style="display:flex; justify-content:center; gap:15px; margin-top:20px;">
+                <button id="copyBtn" class="hud-btn btn-code" onclick="copyStudentCode()"
+                    style="margin:0; width:160px; justify-content:center;">📄 KODU KOPYALA</button>
+                <a href="https://app.talent14.com/codeEditor" target="_blank" class="hud-btn btn-code"
+                    style="margin:0; width:160px; justify-content:center;">EDİTÖRÜ AÇ</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-box">
+            <div id="res-emoji" style="font-size:4rem; margin-bottom:10px;"></div>
+            <h2 id="res-title"></h2>
+            <p id="res-desc"></p>
+            <div id="secretLetter" style="margin-top:10px; display:none;">
+                <div style="font-size:0.8rem; color:#8395a7;">GİZLİ ŞİFRE HARFİNİ BULDUN!</div>
+                <div
+                    style="font-size:2rem; color:#f1c40f; font-family:'Orbitron'; background:rgba(241,196,15,0.1); border:2px dashed #f1c40f; display:inline-block; padding:10px 20px; border-radius:10px; margin-top:10px;">
+                    S</div>
+            </div>
+            <br>
+            <button class="hud-btn" id="res-btn"
+                style="display:inline-block; width:200px; justify-content:center;"></button>
+        </div>
+    </div>
+
+    <script>
+        const levels = [
+            {
+                title: "Köprü Onarımı",
+                desc: "Eksik tahtaları hesaplayan algoritmayı düzelt.",
+                correct: [1, 2, 3, 4, 5],
+                items: [
+                    { id: 3, text: "HESAPLA: Eksik = 10 - Tahta Sayısı" },
+                    { id: 1, text: "BAŞLA" },
+                    { id: 5, text: "BİTİR" },
+                    { id: 2, text: "GİR: Tahta Sayısı" },
+                    { id: 4, text: "YAZ: Eksik Tahta" }
+                ]
+            },
+            {
+                title: "Okula Hazırlık",
+                desc: "Sabah rutini için doğru sırayı oluştur.",
+                correct: [1, 2, 3, 4, 5],
+                items: [
+                    { id: 3, text: "GİYİN: Okul Forması" },
+                    { id: 1, text: "BAŞLA: Uyan" },
+                    { id: 5, text: "BİTİR: Okula Git" },
+                    { id: 2, text: "YAP: Yüzünü Yıka" },
+                    { id: 4, text: "YE: Kahvaltı" }
+                ]
+            },
+            {
+                title: "Sandviç Yapımı",
+                desc: "Lezzetli bir sandviç için adımları sırala.",
+                correct: [1, 2, 3, 4, 5],
+                items: [
+                    { id: 3, text: "KOY: Peynir ve Domates" },
+                    { id: 4, text: "KAPAT: Diğer Ekmek Dilimi" },
+                    { id: 1, text: "BAŞLA" },
+                    { id: 5, text: "BİTİR: Afiyet Olsun" },
+                    { id: 2, text: "AL: İki Dilim Ekmek" }
+                ]
+            }
+        ];
+
+        let currentLvl = 0;
+        let currentItems = [];
+        let selectedIdx = -1;
+
+        function initLevel() {
+            if (currentLvl >= levels.length) {
+                showResult(true, "HARİKA İŞ!", "Tüm algoritmaları başarıyla kurdun.", true);
+                return;
+            }
+
+            const L = levels[currentLvl];
+            document.getElementById('lvl-title').innerText = L.title;
+            document.getElementById('lvl-desc').innerText = L.desc;
+
+            // Dots
+            const dots = document.getElementById('dots');
+            dots.innerHTML = "";
+            for (let i = 0; i < levels.length; i++) {
+                let d = document.createElement('div');
+                d.className = 'dot' + (i === currentLvl ? ' active' : '');
+                dots.appendChild(d);
+            }
+
+            // Stones
+            const sCont = document.getElementById('stones-container');
+            sCont.innerHTML = "";
+            L.items.forEach(() => {
+                let s = document.createElement('div');
+                s.className = 'stone';
+                sCont.appendChild(s);
+            });
+
+            // List
+            currentItems = JSON.parse(JSON.stringify(L.items)); // Deep copy
+            selectedIdx = -1;
+            render();
+        }
+
+        function render() {
+            const list = document.getElementById('list');
+            list.innerHTML = "";
+            currentItems.forEach((item, idx) => {
+                let div = document.createElement('div');
+                div.className = `code-line ${idx === selectedIdx ? 'selected' : ''}`;
+                div.innerText = item.text;
+                div.onclick = () => { selectedIdx = idx; render(); };
+                list.appendChild(div);
+            });
+        }
+
+        function moveItem(dir) {
+            if (selectedIdx === -1) return;
+            const newIdx = selectedIdx + dir;
+            if (newIdx < 0 || newIdx >= currentItems.length) return;
+
+            // Swap
+            [currentItems[selectedIdx], currentItems[newIdx]] = [currentItems[newIdx], currentItems[selectedIdx]];
+            selectedIdx = newIdx;
+            render();
+        }
+
+        function checkSort() {
+            const currentIds = currentItems.map(i => i.id);
+            const correctIds = levels[currentLvl].correct;
+
+            if (JSON.stringify(currentIds) === JSON.stringify(correctIds)) {
+                document.querySelectorAll('.stone').forEach(s => s.classList.add('active'));
+                showResult(true, "KÖPRÜ KURULDU!", "Algoritma doğru çalıştı.");
+            } else {
+                showResult(false, "YIKILDI!", "Sıralamada hata var.");
+            }
+        }
+
+        function showResult(success, title, desc, isFinal = false) {
+            document.getElementById('res-emoji').innerText = success ? "🌉" : "💥";
+            document.getElementById('res-title').innerText = title;
+            document.getElementById('res-title').style.color = success ? "#2ecc71" : "#e74c3c";
+            document.getElementById('res-desc').innerText = desc;
+            const secretLetter = document.getElementById('secretLetter');
+
+            const btn = document.getElementById('res-btn');
+            if (isFinal) {
+                btn.innerText = "ANA MENÜ";
+                btn.onclick = () => gorevTamamDon();
+                btn.style.background = "#2ecc71";
+                if (secretLetter) secretLetter.style.display = 'block';
+            } else if (success) {
+                btn.innerText = "SONRAKİ SEVİYE";
+                btn.onclick = () => {
+                    closeModal('resultModal');
+                    currentLvl++;
+                    initLevel();
+                };
+                btn.style.background = "#00cec9";
+                if (secretLetter) secretLetter.style.display = 'none';
+            } else {
+                btn.innerText = "TEKRAR DENE";
+                btn.onclick = () => closeModal('resultModal');
+                btn.style.background = "#e74c3c";
+                if (secretLetter) secretLetter.style.display = 'none';
+            }
+            openModal('resultModal');
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function copyStudentCode() {
+            const btn = document.getElementById('copyBtn');
+            if (!btn) return;
+            btn.innerHTML = "⌛...";
+            fetch('ogrenci_kodu3.txt')
+                .then(r => r.text())
+                .then(kod => {
+                    if (navigator.clipboard) {
+                        return navigator.clipboard.writeText(kod);
+                    } else {
+                        const ta = document.createElement('textarea');
+                        ta.value = kod;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                    }
+                })
+                .then(() => {
+                    btn.innerHTML = "✓ TAMAM"; btn.style.background = "#00cec9";
+                    setTimeout(() => { btn.innerHTML = "📄 KODU KOPYALA"; btn.style.background = "transparent"; }, 2000);
+                })
+                .catch(() => alert("Dosya bulunamadı!"));
+        }
+
+        function gorevTamamDon() {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ tip: 'GOREV_TAMAM', id: 3, harf: 'S' }, '*');
+                setTimeout(() => menuyeDon(), 300);
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function menuyeDon() {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ tip: 'MENUYE_DON' }, '*');
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        initLevel();
+    </script>
+</body>
+
+</html>

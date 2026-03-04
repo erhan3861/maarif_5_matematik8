@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: sans-serif; background: #2c3e50; color: white; text-align: center; padding: 50px; }
+  .kart { background: #34495e; padding: 30px; border-radius: 10px; max-width: 400px; margin: auto; }
+  #mesaj { margin-top:20px; padding:15px; border-radius:5px; font-weight:bold; }
+  .sekil { display: inline-block; padding: 20px 40px; border: 4px solid white; margin-bottom:10px; margin-top:20px; font-size:1.5rem;}
+  .elips { border-radius: 50px; }
+  .dikdortgen { border-radius: 0; }
+  .paralelkenar { transform: skew(-20deg); }
+  .eskenardortgen { transform: rotate(45deg); width:60px; height:60px; padding:0; margin-top:40px; }
+</style>
+</head>
+<body>
+<div class="kart">
+  <h2>ŞEKİL USTALARI</h2>
+  <h3 id="soruSistemi">SORU: Programı BAŞLATMAK için hangi şekli kullanırız?</h3>
+  <div id="sekilKutusu"><div id="sekilCizimi" class="sekil elips"></div></div>
+  <div id="mesaj" style="display:none;"></div>
+</div>
+
+<script>
+/* =======================================
+   ŞEKİL USTALARI - Akış Şemaları
+   =======================================
+   Akış şemalarında her şeklin bir anlamı vardır:
+   elips: Başla veya Bitir
+   paralelkenar: Veri Girişi (Soru sorma)
+   dikdortgen: İşlem Yapma (Hesaplama)
+   eskenardortgen: Karar Verme (Eğer/Değilse)
+*/
+
+// GÖREV: Aşağıdaki cevabı elips, paralelkenar, dikdortgen veya eskenardortgen yaparak doğruluğunu test et!
+const benimCevabim = "eskenardortgen"; // (Örn: "elips" yaparsan doğru cevap olur!)
+
+// ======== DEĞERLENDİRME VE GÖRSELLEŞTİRME BÖLÜMÜ ========
+const dogruCevap = "elips";
+let panel = document.getElementById("mesaj");
+let sekilCizimi = document.getElementById("sekilCizimi");
+
+sekilCizimi.className = "sekil " + benimCevabim;
+if (benimCevabim === "eskenardortgen" || benimCevabim === "paralelkenar") { 
+    sekilCizimi.innerHTML = ""; // Stil bozulmasını önlemek için
+} else {
+    sekilCizimi.innerHTML = benimCevabim.toUpperCase();
+}
+
+panel.style.display = "block";
+if (benimCevabim === dogruCevap) {
+    panel.style.background = "#2ecc71";
+    panel.innerHTML = "🎉 TEBRİKLER! Başla komutu Elips'tir.";
+} else {
+    panel.style.background = "#e74c3c";
+    panel.innerHTML = "❌ YANLIŞ ŞEKİL. Lütfen tekrar dene.";
+}
+</script>
+</body>
+</html>

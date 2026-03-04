@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: sans-serif; background: #2c3e50; color: white; text-align: center; padding: 50px; transition: 0.5s; }
+  .yol { background: #34495e; padding: 30px; border-radius: 10px; max-width: 400px; margin: auto; }
+  .ikon { font-size: 5rem; }
+  #mesaj { margin-top:20px; padding:15px; border-radius:5px; font-weight:bold; font-size:1.2rem; }
+</style>
+</head>
+<body>
+<div class="yol">
+  <div class="ikon" id="yolIkonu">❓</div>
+  <h2>YOL AYRIMI (IF / ELSE)</h2>
+  <div id="mesaj">Yön Bekleniyor...</div>
+</div>
+
+<script>
+/* =======================================
+   YOL AYRIMI - Karar Verme (If / Else)
+   =======================================
+   Bilgisayarlar mantıklı seçimler yapmak
+   için If (Eğer) ve Else (Değilse) kullanır.
+   
+   KURAL: "Eğer Elmas Sayısı 50'den büyükse (> 50) SAĞDAN GİT, Değilse SOLDAN GİT"
+*/
+
+// GÖREV: Şövalyenin elmas sayısını değiştirerek hangi yoldan
+// gideceğini gözlemle. Ne yaparsan doğru yoldan (SAĞ)'dan gider?
+let oyuncununElmasSayisi = 45; // Test etmek için bu sayıyı 60 yap
+
+// Karar Verme Bloğu
+let secilenYol = "";
+
+if (oyuncununElmasSayisi > 50) {
+    // EĞER Şart Doğruysa
+    secilenYol = "SAĞ"; 
+} else {
+    // Şart Yanlışsa (DEĞİLSE)
+    secilenYol = "SOL";
+}
+
+// ======== DEĞERLENDİRME VE GÖRSELLEŞTİRME BÖLÜMÜ ========
+let panel = document.getElementById("mesaj");
+let ikon = document.getElementById("yolIkonu");
+
+// Görseli yol kuralına göre boyuyoruz:
+if (secilenYol === "SAĞ") {
+    document.body.style.background = "#2ecc71"; // Doğruysa Yeşil
+    ikon.innerHTML = "👉";
+    panel.innerHTML = "Elmas yeterli! (<span style='color:black'>" + oyuncununElmasSayisi + "</span>) SAĞDAN Gidiliyor...";
+} else {
+    document.body.style.background = "#e74c3c"; // Yanlışsa Kırmızı
+    ikon.innerHTML = "👈";
+    panel.innerHTML = "Elmas yetersiz! (<span style='color:black'>" + oyuncununElmasSayisi + "</span>) SOLDAN Gidiliyor...";
+}
+</script>
+</body>
+</html>

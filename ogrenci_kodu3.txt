@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: sans-serif; background: #2c3e50; color: white; text-align: center; padding: 50px; }
+  .pano { background: #34495e; padding: 30px; border-radius: 10px; max-width: 450px; margin: auto; }
+  .kod { background:#1e272e; padding:15px; font-family:monospace; text-align:left; border-left:4px solid #f1c40f; font-size:1.1rem; line-height:1.5; }
+  #sonuc { margin-top:20px; padding:15px; border-radius:5px; font-weight:bold; font-size:1.2rem; }
+  .hata { text-decoration: underline red 2px; }
+</style>
+</head>
+<body>
+<div class="pano">
+  <h2>KRİSTAL KÖPRÜ - SÖZDE KOD</h2>
+  <div class="kod" id="kodAlani"></div>
+  <div id="sonuc" style="display:none;"></div>
+</div>
+
+<script>
+/* =======================================
+   KRİSTAL KÖPRÜ - Algoritma Adımları
+   =======================================
+   GÖREV: Taş dizilimini (1'den 5'e) baştan sona doğru diz.
+   Sorunlu Köprüyü düzelt.
+*/
+
+// Aşağıdaki sayıların sırasını değiştirin. (Doğru mantık: 1, 2, 3, 4, 5)
+// 1: BAŞLA
+// 2: GİR(Tahta Sayısı)
+// 3: HESAPLA
+// 4: YAZ
+// 5: BİTİR
+let benimSiralamam = [1, 3, 2, 4, 5]; // (Örn: 1,2,3,4,5 olarak düzelt!)
+
+// ======== DEĞERLENDİRME VE GÖRSELLEŞTİRME BÖLÜMÜ ========
+const kodSozlugu = {
+  1: "BAŞLA",
+  2: "GİR: Tahta Sayısı",
+  3: "HESAPLA: Eksik = 10 - Tahta Sayısı",
+  4: "YAZ: Eksik Tahta",
+  5: "BİTİR"
+};
+const dogruSiralama = [1, 2, 3, 4, 5];
+
+let htmllist = benimSiralamam.map((id, index) => {
+    let sinif = (id === dogruSiralama[index]) ? "" : "class='hata'";
+    return `<div ${sinif}>${id}. ${kodSozlugu[id]}</div>`;
+});
+document.getElementById("kodAlani").innerHTML = htmllist.join("");
+
+let panel = document.getElementById("sonuc");
+panel.style.display = "block";
+if (benimSiralamam.toString() === dogruSiralama.toString()) {
+    panel.style.background = "#2ecc71";
+    panel.innerHTML = "🌉 KÖPRÜ KURULDU! Düzgün Sözde Kod.";
+} else {
+    panel.style.background = "#e74c3c";
+    panel.innerHTML = "💥 YIKILDI! Kırmızı ile çizilen kodların yerleri hatalı.";
+}
+</script>
+</body>
+</html>

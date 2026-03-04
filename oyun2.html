@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Şekil Ustaları - Akış Şeması</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Fredoka:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3498db;
+            --dark-bg: #1e272e;
+            --accent: #9b59b6;
+            --text-light: #ecf0f1;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Fredoka', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: radial-gradient(circle at 80% 20%, #2c3e50 0%, #1a1a1a 100%);
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            height: 50px;
+        }
+
+        .hud h1 {
+            font-family: 'Orbitron';
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .hud-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Orbitron';
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        .stage {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .spirit-emoji {
+            font-size: 6rem;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 20px rgba(52, 152, 219, 0.6));
+        }
+
+        .question-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 15px;
+            max-width: 300px;
+            margin: 0 auto;
+            font-size: 0.9rem;
+        }
+
+        .shapes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .shape-btn {
+            width: 100px;
+            height: 70px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2c3e50;
+            transition: 0.3s;
+            position: relative;
+            font-size: 0.8rem;
+        }
+
+        .shape-btn:hover {
+            transform: scale(1.1);
+            border-color: white;
+        }
+
+        .s-elips {
+            background: #e74c3c;
+            border-radius: 50px;
+        }
+
+        .s-paralel {
+            background: #3498db;
+            transform: skewX(-20deg);
+        }
+
+        .s-paralel span {
+            transform: skewX(20deg);
+        }
+
+        /* Text fix */
+        .s-dikdortgen {
+            background: #f1c40f;
+        }
+
+        .s-eskenar {
+            background: #9b59b6;
+            transform: rotate(45deg);
+            width: 80px;
+            height: 80px;
+            margin: 20px;
+        }
+
+        .s-eskenar span {
+            transform: rotate(-45deg);
+            display: block;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: white;
+            color: #2c3e50;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .code-block {
+            background: #2d3436;
+            color: #f1f2f6;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: left;
+            font-family: monospace;
+            margin: 20px 0;
+            border-left: 4px solid #f1c40f;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hud">
+        <button onclick="menuyeDon()" class="hud-btn"
+            style="background:transparent; border:none; color:white; font-size:1rem; cursor:pointer;">❮ MENÜ</button>
+        <h1>ŞEKİL USTALARI</h1>
+        <div style="display:flex; gap:10px;">
+            <button class="hud-btn" onclick="openModal('missionModal')">📜 GÖREV</button>
+            <button class="hud-btn btn-code" onclick="openModal('codeModal')">💻 KODLA</button>
+        </div>
+    </div>
+
+    <div class="stage">
+        <div class="spirit-container">
+            <div class="spirit-emoji">👻</div>
+            <div class="question-box">
+                <p id="q-text">Hazır mısın?</p>
+            </div>
+        </div>
+
+        <div class="shapes-grid">
+            <div class="shape-btn s-elips" onclick="checkAnswer('elips')"><span>BAŞLA</span></div>
+            <div class="shape-btn s-paralel" onclick="checkAnswer('paralel')"><span>GİRİŞ</span></div>
+            <div class="shape-btn s-dikdortgen" onclick="checkAnswer('dikdortgen')"><span>İŞLEM</span></div>
+            <div class="shape-btn s-eskenar" onclick="checkAnswer('eskenar')"><span>KARAR</span></div>
+        </div>
+    </div>
+
+    <!-- Mission -->
+    <div class="modal" id="missionModal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('missionModal')">&times;</span>
+            <h2 style="color:var(--primary); font-family:'Orbitron'">GÖREV TALİMATI</h2>
+            <p>Orman ustaları seninle konuşmak istiyor ama sadece <b>Şekil Dili</b> biliyorlar.</p>
+            <p>Sana sordukları komutun hangi geometrik şekil olduğunu seçerek onlara cevap ver.</p>
+        </div>
+    </div>
+
+    <!-- Code -->
+    <div class="modal" id="codeModal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('codeModal')">&times;</span>
+            <h2 style="color:#f1c40f; font-family:'Orbitron'">KOD LABORATUVARI</h2>
+            <p>Akış şemaları (Flowchart), kod yazmadan önce mantığı çizerek kurmamızı sağlar.</p>
+            <div class="code-block">
+                Elips -> Başla/Bitir<br>
+                Paralelkenar -> Veri Oku/Yaz<br>
+                Dikdörtgen -> Hesapla (x = 5+3)<br>
+                Eşkenar D. -> Eğer (x > 10)
+            </div>
+            <div style="display:flex; justify-content:center; gap:15px; margin-top:20px;">
+                <button id="copyBtn" class="hud-btn btn-code" onclick="copyStudentCode()"
+                    style="margin:0; width:160px; justify-content:center;">📄 KODU KOPYALA</button>
+                <a href="https://app.talent14.com/codeEditor" target="_blank" class="hud-btn btn-code"
+                    style="margin:0; width:160px; justify-content:center;">EDİTÖRÜ AÇ</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals for Win/Lose -->
+    <div class="modal" id="resultModal">
+        <div class="modal-box">
+            <h2 id="res-title" style="font-family:'Orbitron'"></h2>
+            <p id="res-desc"></p>
+            <div id="secretLetter" style="margin-top:10px; display:none;">
+                <div style="font-size:0.8rem; color:#8395a7;">GİZLİ ŞİFRE HARFİNİ BULDUN!</div>
+                <div
+                    style="font-size:2rem; color:#f1c40f; font-family:'Orbitron'; background:rgba(241,196,15,0.1); border:2px dashed #f1c40f; display:inline-block; padding:10px 20px; border-radius:10px; margin-top:10px;">
+                    İ</div>
+            </div>
+            <button class="hud-btn" id="res-btn"
+                style="display:inline-block; margin-top:10px; background:#2ecc71;">DEVAM ET</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { id: 'elips', text: "Programı BAŞLATMAK veya BİTİRMEK için hangi şekli kullanmalıyım?" },
+            { id: 'paralel', text: "Kullanıcıdan bir SAYI İSTEMEK (Veri Girişi) için hangi şekli kullanmalıyım?" },
+            { id: 'dikdortgen', text: "İki sayıyı TOPLAMAK (İşlem/Hesap) için hangi şekli kullanmalıyım?" },
+            { id: 'eskenar', text: "Sayının BÜYÜK olup olmadığına KARAR VERMEK için hangi şekli kullanmalıyım?" },
+            // New Questions
+            { id: 'elips', text: "Algoritmanın sonuna geldik. BİTİR komutu için hangi şekil gerekir?" },
+            { id: 'dikdortgen', text: "Bir değişkenin değerini 1 ARTIRMAK (x = x + 1) için hangi şekli seçmeliyim?" },
+            { id: 'eskenar', text: "Kullanıcının şifresi DOĞRU MU diye kontrol etmek için hangisi uygundur?" },
+            { id: 'paralel', text: "Ekrana 'Merhaba Dünya' YAZDIRMAK (Çıktı) için hangi şekli kullanmalıyım?" }
+        ];
+
+        let qIndex = 0;
+
+        function loadQuestion() {
+            if (qIndex >= questions.length) {
+                // Game Over
+                document.getElementById('res-title').innerText = "HARİKA!";
+                document.getElementById('res-title').style.color = "#2ecc71";
+                document.getElementById('res-desc').innerText = "Tüm şekilleri doğru bildin.";
+                document.getElementById('secretLetter').style.display = 'block';
+                document.getElementById('res-btn').onclick = () => gorevTamamDon();
+                openModal('resultModal');
+                return;
+            }
+            document.getElementById('q-text').innerText = questions[qIndex].text;
+        }
+
+        function checkAnswer(shapeId) {
+            if (shapeId === questions[qIndex].id) {
+                // Correct
+                qIndex++;
+                loadQuestion();
+            } else {
+                // Wrong
+                document.getElementById('res-title').innerText = "YANLIŞ CEVAP";
+                document.getElementById('res-title').style.color = "#e74c3c";
+                document.getElementById('res-desc').innerText = "Bu şekil o anlama gelmiyor. Tekrar dene.";
+                document.getElementById('secretLetter').style.display = 'none';
+                document.getElementById('res-btn').innerText = "TEKRAR DENE";
+                document.getElementById('res-btn').onclick = () => closeModal('resultModal');
+                openModal('resultModal');
+            }
+        }
+
+        window.onload = loadQuestion;
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function copyStudentCode() {
+            const btn = document.getElementById('copyBtn');
+            if (!btn) return;
+            btn.innerHTML = "⌛...";
+            fetch('ogrenci_kodu2.txt')
+                .then(r => r.text())
+                .then(kod => {
+                    if (navigator.clipboard) {
+                        return navigator.clipboard.writeText(kod);
+                    } else {
+                        const ta = document.createElement('textarea');
+                        ta.value = kod;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                    }
+                })
+                .then(() => {
+                    btn.innerHTML = "✓ TAMAM"; btn.style.background = "#2ecc71";
+                    setTimeout(() => { btn.innerHTML = "📄 KODU KOPYALA"; btn.style.background = "transparent"; }, 2000);
+                })
+                .catch(() => alert("Dosya bulunamadı!"));
+        }
+
+        function gorevTamamDon() {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ tip: 'GOREV_TAMAM', id: 2, harf: 'İ' }, '*');
+                setTimeout(() => menuyeDon(), 300);
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function menuyeDon() {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ tip: 'MENUYE_DON' }, '*');
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

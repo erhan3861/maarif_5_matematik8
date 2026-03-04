@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilge Baykuş - Algoritma İzleme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Fredoka:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f1c40f;
+            --dark-bg: #2c3e50;
+            --accent: #e67e22;
+            --text-light: #ecf0f1;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Fredoka', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: radial-gradient(circle at 10% 10%, #34495e 0%, #1a1a1a 100%);
+            transition: background 1s;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            height: 50px;
+        }
+
+        .hud h1 {
+            font-family: 'Orbitron';
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .hud-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Orbitron';
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        .hud-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #2c3e50;
+        }
+
+        .btn-code {
+            border-color: #e67e22;
+            color: #e67e22;
+        }
+
+        .btn-code:hover {
+            background: #e67e22;
+            color: white;
+        }
+
+        .stage {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .owl-character {
+            font-size: 7rem;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .dialog-box {
+            background: white;
+            color: #2c3e50;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 450px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .dialog-box::after {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            border: 10px solid transparent;
+            border-right-color: white;
+        }
+
+        .input-area {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .ans-input {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            width: 100px;
+            text-align: center;
+        }
+
+        .submit-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Orbitron';
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: white;
+            color: #2c3e50;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #95a5a6;
+        }
+
+        .progress-dots {
+            position: absolute;
+            top: 100px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .dot.active {
+            background: var(--primary);
+            transform: scale(1.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hud">
+        <button onclick="menuyeDon()" class="hud-btn"
+            style="background:transparent; border:none; color:white; font-size:1rem; cursor:pointer;">❮ MENÜ</button>
+        <h1>BİLGE BAYKUŞ</h1>
+        <div style="display:flex; gap:10px;">
+            <button class="hud-btn" onclick="openModal('missionModal')">📜 GÖREV</button>
+            <button class="hud-btn btn-code" onclick="openModal('codeModal')">💻 KODLA</button>
+        </div>
+    </div>
+
+    <div class="progress-dots" id="dots" style="left:50%; transform:translateX(-50%);"></div>
+
+    <div class="stage">
+        <div class="owl-character" id="owl">🦉</div>
+
+        <div class="dialog-box">
+            <h3 style="margin-top:0; color:#e67e22;" id="q-title"></h3>
+            <p id="q-text" style="font-size:1.1rem; line-height:1.5;"></p>
+            <p style="font-size:0.9rem; color:#7f8c8d;" id="q-hint"></p>
+
+            <div class="input-area">
+                <input type="number" id="answer" class="ans-input" placeholder="?">
+                <button class="submit-btn" onclick="checkAnswer()">SÖYLE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="missionModal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('missionModal')">&times;</span>
+            <h2>GÖREV TALİMATI</h2>
+            <p>Baykuşun verdiği problemleri adım adım çözerek doğru sonucu bul.</p>
+            <p>Her problem, günlük hayatta karşılaştığımız bir <b>Algoritma Takibi</b> örneğidir.</p>
+        </div>
+    </div>
+
+    <div class="modal" id="codeModal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('codeModal')">&times;</span>
+            <h2>KOD LABORATUVARI</h2>
+            <div
+                style="background:#2d3436; color:#fff; padding:15px; text-align:left; border-radius:5px; font-family:monospace; margin-bottom:10px;">
+                <span style="color:#f1c40f">let</span> fiyat700g = 21;<br>
+                <span style="color:#f1c40f">let</span> birimFiyat = 21 / 7; <span style="color:#95a5a6">// 3 TL
+                    (100g)</span><br>
+                <span style="color:#f1c40f">let</span> sonuc = birimFiyat * 10;<br>
+                console.log(sonuc);
+            </div>
+            <div style="display:flex; justify-content:center; gap:15px; margin-top:20px;">
+                <button id="copyBtn" class="hud-btn btn-code" onclick="copyStudentCode()"
+                    style="margin:0; width:160px; justify-content:center;">📄 KODU KOPYALA</button>
+                <a href="https://app.talent14.com/codeEditor" target="_blank" class="hud-btn btn-code"
+                    style="margin:0; width:160px; justify-content:center;">EDİTÖRÜ AÇ</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-box">
+            <div id="res-emoji" style="font-size:4rem; margin-bottom:10px;"></div>
+            <h2 id="res-title"></h2>
+            <p id="res-desc"></p>
+            <div id="secretLetter" style="margin-top:10px; display:none;">
+                <div style="font-size:0.8rem; color:#8395a7;">GİZLİ ŞİFRE HARFİNİ BULDUN!</div>
+                <div
+                    style="font-size:2rem; color:#f1c40f; font-family:'Orbitron'; background:rgba(241,196,15,0.1); border:2px dashed #f1c40f; display:inline-block; padding:10px 20px; border-radius:10px; margin-top:10px;">
+                    T</div>
+            </div>
+            <button class="hud-btn" id="res-btn" style="display:inline-block; margin-top:10px;"></button>
+        </div>
+    </div>
+
+    <script>
+        const levels = [
+            {
+                title: "Fındık Fiyatı",
+                text: "Markette fındığın <b>700 gramı 21 TL</b> ise, fındığın <b>1 Kilogramı</b> kaç TL eder?",
+                hint: "İpucu: Önce 100 gram fiyatını bul (21 / 7).",
+                answer: 30,
+                successMsg: "Tebrikler! 100gr = 3TL, 1000gr = 30TL.",
+                failMsg: "Tekrar hesapla. 21 / 7 = 3 (100gr). 1kg = 10 tane 100gr."
+            },
+            {
+                title: "Alan Hesabı",
+                text: "Bir odanın eni <b>4 metre</b>, boyu <b>5 metre</b>dir. Halıfleksin metrekaresi <b>100 TL</b> ise, bu odayı kaplamak kaç TL tutar?",
+                hint: "İpucu: Önce alanı bul (En x Boy), sonra fiyatla çarp.",
+                answer: 2000,
+                successMsg: "Doğru! Alan = 20m². Tutar = 20 x 100 = 2000 TL.",
+                failMsg: "Önce alanı bul: 4 x 5 = 20. Sonra 20 ile 100'ü çarp."
+            },
+            {
+                title: "Para Üstü",
+                text: "Kantinde tost <b>15 TL</b>, ayran <b>5 TL</b>. Cebinde <b>50 TL</b> var. İkisinden de birer tane alırsan geriye kaç TL kalır?",
+                hint: "İpucu: Toplam harcamayı bul, sonra 50'den çıkar.",
+                answer: 30,
+                successMsg: "Harika! 15+5=20 TL harcadın. 50-20=30 TL kaldı.",
+                failMsg: "Harcaman: 15 + 5 = 20 TL. 50 TL'den bunu çıkar."
+            }
+        ];
+
+        let currentLvl = 0;
+
+        function initLevel() {
+            if (currentLvl >= levels.length) {
+                showResult(true, "BİLGİN BAYKUŞ!", "Tüm hesaplamaları doğru yaptın.", true);
+                return;
+            }
+
+            const L = levels[currentLvl];
+            document.getElementById('q-title').innerText = L.title;
+            document.getElementById('q-text').innerHTML = L.text;
+            document.getElementById('q-hint').innerText = L.hint;
+            document.getElementById('answer').value = "";
+
+            // Dots
+            const dots = document.getElementById('dots');
+            dots.innerHTML = "";
+            for (let i = 0; i < levels.length; i++) {
+                let d = document.createElement('div');
+                d.className = 'dot' + (i === currentLvl ? ' active' : '');
+                dots.appendChild(d);
+            }
+        }
+
+        function checkAnswer() {
+            const val = parseInt(document.getElementById('answer').value);
+            const L = levels[currentLvl];
+
+            if (val === L.answer) {
+                showResult(true, "DOĞRU CEVAP!", L.successMsg);
+            } else {
+                showResult(false, "YANLIŞ...", L.failMsg);
+            }
+        }
+
+        function showResult(success, title, desc, isFinal = false) {
+            document.getElementById('res-emoji').innerText = success ? "🎓" : "🤔";
+            document.getElementById('res-title').innerText = title;
+            document.getElementById('res-title').style.color = success ? "#2ecc71" : "#e74c3c";
+            document.getElementById('res-desc').innerText = desc;
+            const secretLetter = document.getElementById('secretLetter');
+
+            const btn = document.getElementById('res-btn');
+            if (isFinal) {
+                btn.innerText = "ANA MENÜ";
+                btn.onclick = () => gorevTamamDon();
+                btn.style.background = "#2ecc71";
+                if (secretLetter) secretLetter.style.display = 'block';
+            } else if (success) {
+                btn.innerText = "SONRAKİ SORU";
+                btn.onclick = () => {
+                    closeModal('resultModal');
+                    currentLvl++;
+                    initLevel();
+                };
+                btn.style.background = "#f1c40f";
+                btn.style.color = "#2c3e50";
+                if (secretLetter) secretLetter.style.display = 'none';
+            } else {
+                btn.innerText = "TEKRAR DENE";
+                btn.onclick = () => closeModal('resultModal');
+                btn.style.background = "#e74c3c";
+                btn.style.color = "white";
+                if (secretLetter) secretLetter.style.display = 'none';
+            }
+            openModal('resultModal');
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function copyStudentCode() {
+            const btn = document.getElementById('copyBtn');
+            if (!btn) return;
+            btn.innerHTML = "⌛...";
+            fetch('ogrenci_kodu4.txt')
+                .then(r => r.text())
+                .then(kod => {
+                    if (navigator.clipboard) {
+                        return navigator.clipboard.writeText(kod);
+                    } else {
+                        const ta = document.createElement('textarea');
+                        ta.value = kod;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                    }
+                })
+                .then(() => {
+                    btn.innerHTML = "✓ TAMAM"; btn.style.background = "#e67e22";
+                    setTimeout(() => { btn.innerHTML = "📄 KODU KOPYALA"; btn.style.background = "transparent"; }, 2000);
+                })
+                .catch(() => alert("Dosya bulunamadı!"));
+        }
+
+        function gorevTamamDon() {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ tip: 'GOREV_TAMAM', id: 4, harf: 'T' }, '*');
+                setTimeout(() => menuyeDon(), 300);
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function menuyeDon() {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ tip: 'MENUYE_DON' }, '*');
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        initLevel();
+    </script>
+</body>
+
+</html>

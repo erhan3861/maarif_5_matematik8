@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kış Hazırlığı - Döngüler</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Fredoka:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e67e22;
+            --dark-bg: #2d3436;
+            --accent: #d35400;
+            --text-light: #ecf0f1;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Fredoka', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: radial-gradient(circle at 50% 10%, #2c3e50 0%, #000 100%);
+            transition: background 1s;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            height: 50px;
+        }
+
+        .hud h1 {
+            font-family: 'Orbitron';
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .hud-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Orbitron';
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        .hud-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-code {
+            border-color: #f1c40f;
+            color: #f1c40f;
+        }
+
+        .btn-code:hover {
+            background: #f1c40f;
+            color: #fff;
+        }
+
+        .stage {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .collection-zone {
+            display: flex;
+            gap: 10px;
+            min-height: 100px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 80%;
+        }
+
+        .collection-zone {
+            display: flex;
+            gap: 10px;
+            min-height: 80px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 80%;
+        }
+
+        .item {
+            font-size: 2.5rem;
+            animation: pop 0.3s;
+        }
+
+        @keyframes pop {
+            from {
+                transform: scale(0);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .loop-controls {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        input[type="number"] {
+            font-size: 1.2rem;
+            padding: 8px;
+            width: 60px;
+            text-align: center;
+            border-radius: 10px;
+            border: none;
+            font-weight: bold;
+        }
+
+        .go-btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 10px 30px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-family: 'Orbitron';
+        }
+
+        .go-btn:hover {
+            background: var(--accent);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: white;
+            color: #2c3e50;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #95a5a6;
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .dot.active {
+            background: var(--primary);
+            transform: scale(1.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hud">
+        <button onclick="menuyeDon()" class="hud-btn"
+            style="background:transparent; border:none; color:white; font-size:1rem; cursor:pointer;">❮ MENÜ</button>
+        <h1>KIŞ HAZIRLIĞI</h1>
+        <div style="display:flex; gap:10px;">
+            <button class="hud-btn" onclick="openModal('missionModal')">📜 GÖREV</button>
+            <button class="hud-btn btn-code" onclick="openModal('codeModal')">💻 KODLA</button>
+        </div>
+    </div>
+
+    <div class="stage">
+        <div class="progress-dots" id="dots"></div>
+        <div style="color:#bdc3c7; margin-bottom:10px; font-size:1.2rem;" id="lvl-goal"></div>
+        <div class="collection-zone" id="pile">
+            <!-- Items appear here -->
+        </div>
+
+        <div class="loop-controls">
+            <h3 style="margin-top:0; color:var(--primary);">DÖNGÜ AYARI</h3>
+            <p id="loop-instruction">topla() komutunu kaç kez tekrar edelim?</p>
+            <div>
+                <span style="font-size:1.5rem; font-family:monospace;">TEKRARLA (</span>
+                <input type="number" id="loop-count" value="1" min="1" max="10">
+                <span style="font-size:1.5rem; font-family:monospace;">)</span>
+            </div>
+            <button class="go-btn" onclick="runLoop()">ÇALIŞTIR</button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="missionModal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('missionModal')">&times;</span>
+            <h2>GÖREV TALİMATI</h2>
+            <p>Kışa hazırlanmak için kaynak toplaman gerekiyor.</p>
+            <p>Her görevde senden istenen <b>tam sayı kadar</b> döngü kurmalısın. Ne eksik, ne fazla!</p>
+        </div>
+    </div>
+
+    <div class="modal" id="codeModal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal('codeModal')">&times;</span>
+            <h2>KOD LABORATUVARI</h2>
+            <div
+                style="background:#2d3436; color:#fff; padding:15px; text-align:left; border-radius:5px; font-family:monospace;">
+                for (let i = 0; i < <span style="color:#f1c40f">5</span>; i++) {<br>
+                    &nbsp;&nbsp;topla();<br>
+                    }
+            </div>
+            <div style="display:flex; justify-content:center; gap:15px; margin-top:20px;">
+                <button id="copyBtn" class="hud-btn btn-code" onclick="copyStudentCode()"
+                    style="margin:0; width:160px; justify-content:center;">📄 KODU KOPYALA</button>
+                <a href="https://app.talent14.com/codeEditor" target="_blank" class="hud-btn btn-code"
+                    style="margin:0; width:160px; justify-content:center;">EDİTÖRÜ AÇ</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-box">
+            <h2 id="res-title"></h2>
+            <p id="res-desc"></p>
+            <div id="secretLetter" style="margin-top:10px; display:none;">
+                <div style="font-size:0.8rem; color:#8395a7;">GİZLİ ŞİFRE HARFİNİ BULDUN!</div>
+                <div
+                    style="font-size:2rem; color:#f1c40f; font-family:'Orbitron'; background:rgba(241,196,15,0.1); border:2px dashed #f1c40f; display:inline-block; padding:10px 20px; border-radius:10px; margin-top:10px;">
+                    M</div>
+            </div>
+            <br>
+            <button class="hud-btn" id="res-btn"
+                style="display:inline-block; width:200px; justify-content:center;"></button>
+        </div>
+    </div>
+
+    <script>
+        const levels = [
+            {
+                goalText: "Hedef: 5 Kütük",
+                target: 5,
+                icon: "🪵",
+                msgSuccess: "Ateş yakıldı! 5 kütük topladın.",
+                color: "#e67e22"
+            },
+            {
+                goalText: "Hedef: 3 Kovası Su",
+                target: 3,
+                icon: "💧",
+                msgSuccess: "Depo doldu! 3 kova su taşıdın.",
+                color: "#3498db"
+            },
+            {
+                goalText: "Hedef: 4 Taş Blok",
+                target: 4,
+                icon: "🧱",
+                msgSuccess: "Duvar örüldü! 4 taş blok yerleştirdin.",
+                color: "#95a5a6"
+            }
+        ];
+
+        let currentLvl = 0;
+
+        function initLevel() {
+            if (currentLvl >= levels.length) {
+                showResult(true, "HAZIRLIK TAMAM!", "Kışa hazırsın. Tüm görevleri başardın.", true);
+                return;
+            }
+
+            const L = levels[currentLvl];
+            document.getElementById('lvl-goal').innerText = L.goalText;
+            document.body.style.backgroundImage = `radial-gradient(circle at 50% 10%, ${L.color} 0%, #000 100%)`;
+            document.getElementById('pile').innerHTML = "";
+            document.querySelector('.hud h1').style.color = L.color;
+            document.getElementById('loop-count').value = 1;
+
+            // Dots
+            const dots = document.getElementById('dots');
+            dots.innerHTML = "";
+            for (let i = 0; i < levels.length; i++) {
+                let d = document.createElement('div');
+                d.className = 'dot' + (i === currentLvl ? ' active' : '');
+                dots.appendChild(d);
+            }
+        }
+
+        function runLoop() {
+            const count = parseInt(document.getElementById('loop-count').value);
+            const pile = document.getElementById('pile');
+            pile.innerHTML = ""; // Reset visual
+            const L = levels[currentLvl];
+
+            // Visual Loop
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i >= count) {
+                    clearInterval(interval);
+                    checkResult(count);
+                    return;
+                }
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.innerText = L.icon;
+                pile.appendChild(item);
+                i++;
+            }, 300);
+        }
+
+        function checkResult(count) {
+            const L = levels[currentLvl];
+            setTimeout(() => {
+                if (count === L.target) {
+                    showResult(true, "BAŞARDIN! ✅", L.msgSuccess);
+                } else if (count < L.target) {
+                    showResult(false, "YETERSİZ ⚠️", `Hedef ${L.target} taneydi, sen ${count} tane topladın.`);
+                } else {
+                    showResult(false, "ÇOK FAZLA 🛑", `Hedef ${L.target} taneydi, sen ${count} tane topladın. Enerjini boşa harcama!`);
+                }
+            }, 500);
+        }
+
+        function showResult(success, title, desc, isFinal = false) {
+            document.getElementById('res-title').innerText = title;
+            document.getElementById('res-title').style.color = success ? "#2ecc71" : "#e74c3c";
+            document.getElementById('res-desc').innerText = desc;
+            const secretLetter = document.getElementById('secretLetter');
+
+            const btn = document.getElementById('res-btn');
+            if (isFinal) {
+                btn.innerText = "ANA MENÜ";
+                btn.onclick = () => gorevTamamDon();
+                btn.style.background = "#2ecc71";
+                if (secretLetter) secretLetter.style.display = 'block';
+            } else if (success) {
+                btn.innerText = "SONRAKİ";
+                btn.onclick = () => {
+                    closeModal('resultModal');
+                    currentLvl++;
+                    initLevel();
+                };
+                btn.style.background = "#3498db";
+                if (secretLetter) secretLetter.style.display = 'none';
+            } else {
+                btn.innerText = "TEKRAR DENE";
+                btn.onclick = () => closeModal('resultModal');
+                btn.style.background = "#e74c3c";
+                if (secretLetter) secretLetter.style.display = 'none';
+            }
+            openModal('resultModal');
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function copyStudentCode() {
+            const btn = document.getElementById('copyBtn');
+            if (!btn) return;
+            btn.innerHTML = "⌛...";
+            fetch('ogrenci_kodu6.txt')
+                .then(r => r.text())
+                .then(kod => {
+                    if (navigator.clipboard) {
+                        return navigator.clipboard.writeText(kod);
+                    } else {
+                        const ta = document.createElement('textarea');
+                        ta.value = kod;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(ta);
+                    }
+                })
+                .then(() => {
+                    btn.innerHTML = "✓ TAMAM"; btn.style.background = "#e67e22";
+                    setTimeout(() => { btn.innerHTML = "📄 KODU KOPYALA"; btn.style.background = "transparent"; }, 2000);
+                })
+                .catch(() => alert("Dosya bulunamadı!"));
+        }
+
+        function gorevTamamDon() {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ tip: 'GOREV_TAMAM', id: 6, harf: 'M' }, '*');
+                setTimeout(() => menuyeDon(), 300);
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function menuyeDon() {
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ tip: 'MENUYE_DON' }, '*');
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        initLevel();
+    </script>
+</body>
+
+</html>

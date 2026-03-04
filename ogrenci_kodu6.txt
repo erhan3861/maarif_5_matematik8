@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: sans-serif; background: #2c3e50; color: white; text-align: center; padding: 50px; }
+  .kis { background: #34495e; padding: 30px; border-radius: 10px; max-width: 400px; margin: auto; }
+  #odunAlani { font-size: 3rem; margin: 20px 0; background: rgba(0,0,0,0.3); padding:10px; border-radius:10px; min-height:60px; line-height:1.2; word-break: break-all;}
+  #sonuc { margin-top:20px; padding:15px; border-radius:5px; font-weight:bold; }
+</style>
+</head>
+<body>
+<div class="kis">
+  <h2>KIŞ HAZIRLIĞI - DÖNGÜLER</h2>
+  <div id="odunAlani"></div>
+  <div id="sonuc"></div>
+</div>
+
+<script>
+/* =======================================
+   KIŞ HAZIRLIĞI - Döngü ve Tekrar (For Loop)
+   =======================================
+   Bir işi defalarca yapmak istediğimizde
+   aynı kodu alt alta 100 defa yazmak yerine "Döngü" (Loop) kurarız.
+   
+   GÖREV: Hedef odun sayısına ulaşmak için FOR döngüsünde
+   bulunan tekrar sayısını (seninGirdiginSayi) değiştir.
+*/
+
+let hedeflenenOdun = 5;
+
+// Tekrar sayısını değiştir. Bu döngü i=0'dan başlar ve i sayısı
+// senin belirlediğin sayıdan küçük olduğu sürece çalışır.
+let seninGirdiginSayi = 3; // Bu sayıyı 5 yapıp "Çalıştır"ı tıkla!
+
+// Döngü Başlıyor
+let toplananOdunEkrani = "";
+let toplamOdunSayisi = 0;
+
+// FOR DÖNGÜSÜ YAPISI (Başlangıç ; Bitiş Şartı ; Artış Miktarı)
+for (let i = 0; i < seninGirdiginSayi; i++) {
+    toplananOdunEkrani += "🪵"; // Ekrana bir odun ekler
+    toplamOdunSayisi += 1; // Sepetteki odun adedini artırır
+}
+
+
+// ======== DEĞERLENDİRME VE GÖRSELLEŞTİRME BÖLÜMÜ ========
+document.getElementById("odunAlani").innerHTML = toplananOdunEkrani || "Hiç Odun Yok";
+let panel = document.getElementById("sonuc");
+
+if (toplamOdunSayisi === hedeflenenOdun) {
+    panel.style.background = "#2ecc71";
+    panel.innerHTML = "Harika! Hedef " + hedeflenenOdun + " Odun Toplandı!";
+} else {
+    panel.style.background = "#e67e22";
+    panel.innerHTML = `Sadece <b>${toplamOdunSayisi}</b> odun topladın. Hedefin <b>${hedeflenenOdun}</b> olmalıydı.`;
+}
+</script>
+</body>
+</html>
