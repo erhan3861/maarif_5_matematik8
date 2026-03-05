@@ -437,27 +437,24 @@
 
         function copyStudentCode() {
             const btn = document.getElementById('copyBtn');
-            if (!btn) return;
             btn.innerHTML = "⌛...";
-            fetch('ogrenci_kodu1.txt')
-                .then(r => r.text())
-                .then(kod => {
-                    if (navigator.clipboard) {
-                        return navigator.clipboard.writeText(kod);
-                    } else {
-                        const ta = document.createElement('textarea');
-                        ta.value = kod;
-                        document.body.appendChild(ta);
-                        ta.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(ta);
-                    }
-                })
-                .then(() => {
-                    btn.innerHTML = "✓ TAMAM"; btn.style.background = "#2ecc71";
-                    setTimeout(() => { btn.innerHTML = "📄 KODU KOPYALA"; btn.style.background = "transparent"; }, 2000);
-                })
-                .catch(() => alert("Dosya bulunamadı!"));
+            fetch('ogrenci_kodu1.txt').then(r => r.text()).then(kod => {
+                // Clipboard API'yi hiç deneme, direkt textarea fallback kullan
+                const ta = document.createElement('textarea');
+                ta.value = kod;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                ta.style.top = '-9999px';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }).then(() => {
+                btn.innerHTML = "✓ TAMAM";
+                btn.style.background = "#2ecc71";
+                setTimeout(() => { btn.innerHTML = "📄 KODU KOPYALA"; btn.style.background = "transparent"; }, 2000);
+            }).catch(() => alert("Dosya bulunamadı!"));
         }
 
         function gorevTamamDon() {
