@@ -61,6 +61,23 @@
             font-size: 0.8rem;
         }
 
+        .hud-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .btn-code {
+            border-color: #f1c40f;
+            color: #f1c40f;
+            background: transparent;
+        }
+
+        .btn-code:hover {
+            background: #f1c40f;
+            color: #2c3e50;
+        }
+
         .stage {
             flex-grow: 1;
             display: flex;
@@ -315,27 +332,24 @@
 
         function copyStudentCode() {
             const btn = document.getElementById('copyBtn');
-            if (!btn) return;
             btn.innerHTML = "⌛...";
-            fetch('ogrenci_kodu2.txt')
-                .then(r => r.text())
-                .then(kod => {
-                    if (navigator.clipboard) {
-                        return navigator.clipboard.writeText(kod);
-                    } else {
-                        const ta = document.createElement('textarea');
-                        ta.value = kod;
-                        document.body.appendChild(ta);
-                        ta.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(ta);
-                    }
-                })
-                .then(() => {
-                    btn.innerHTML = "✓ TAMAM"; btn.style.background = "#2ecc71";
-                    setTimeout(() => { btn.innerHTML = "📄 KODU KOPYALA"; btn.style.background = "transparent"; }, 2000);
-                })
-                .catch(() => alert("Dosya bulunamadı!"));
+            fetch('ogrenci_kodu2.txt').then(r => r.text()).then(kod => {
+                // Clipboard API'yi hiç deneme, direkt textarea fallback kullan
+                const ta = document.createElement('textarea');
+                ta.value = kod;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                ta.style.top = '-9999px';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }).then(() => {
+                btn.innerHTML = "✓ TAMAM";
+                btn.style.background = "#2ecc71";
+                setTimeout(() => { btn.innerHTML = "📄 KODU KOPYALA"; btn.style.background = "transparent"; }, 2000);
+            }).catch(() => alert("Dosya bulunamadı!"));
         }
 
         function gorevTamamDon() {
